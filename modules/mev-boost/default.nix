@@ -39,6 +39,9 @@ in {
                 mkArgs {
                   inherit opts;
                   inherit (cfg) args;
+                  pathReducer = path: let
+                    arg = concatStringsSep "-" path;
+                  in "-${arg}";
                 };
 
               # filter out certain args which need to be treated differently
