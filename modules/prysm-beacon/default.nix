@@ -115,6 +115,9 @@ in {
                   ExecStart = "${cfg.package}/bin/beacon-chain ${scriptArgs}";
                   MemoryDenyWriteExecute = "false"; # causes a library loading error
                 }
+                (mkIf (cfg.args.user != null) {
+                  DynamicUser = false;
+                })
                 (mkIf (cfg.args.jwt-secret != null) {
                   LoadCredential = ["jwt-secret:${cfg.args.jwt-secret}"];
                 })

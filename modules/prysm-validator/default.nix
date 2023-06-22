@@ -114,6 +114,9 @@ in {
                   ExecStart = "${cfg.package}/bin/validator ${scriptArgs}";
                   MemoryDenyWriteExecute = "false"; # causes a library loading error
                 }
+                (mkIf (cfg.args.user != null) {
+                  DynamicUser = false;
+                })
               ];
             })
       )
