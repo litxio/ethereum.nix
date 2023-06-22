@@ -1,21 +1,20 @@
 {
-  options,
   config,
   lib,
   pkgs,
   ...
 }: let
-  modulesLib = import ../lib.nix {inherit lib pkgs;};
+  modulesLib = import ../lib.nix lib;
   inherit (modulesLib) findEnabled;
 
   cfg = with lib;
-    filterAttrs (n: v: v.enable)
+    filterAttrs (_n: v: v.enable)
     (
       mapAttrs (_: attrByPath ["restore"] {enable = false;})
       (findEnabled config.services.ethereum)
     );
 
-  mkRestoreScript = cfg:
+  mkRestoreScript = _cfg:
     pkgs.writeShellScript "restore" ''
       set -euo pipefail
 

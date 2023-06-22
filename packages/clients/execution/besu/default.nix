@@ -7,11 +7,11 @@
 }:
 stdenv.mkDerivation rec {
   pname = "besu";
-  version = "23.1.1";
+  version = "23.4.1";
 
   src = fetchurl {
     url = "https://hyperledger.jfrog.io/hyperledger/${pname}-binaries/${pname}/${version}/${pname}-${version}.tar.gz";
-    sha256 = "sha256-EcPlzbwG3xamkOfun5ju+kaEj5+igIJLbkyJbYj2uXU=";
+    hash = "sha256-SdOnoGnK4wdJcJPYNPhzzngEpG3VkgfV6DIUWVMtMY4=";
   };
 
   nativeBuildInputs = [makeWrapper];
@@ -28,7 +28,8 @@ stdenv.mkDerivation rec {
     description = "Besu is an Apache 2.0 licensed, MainNet compatible, Ethereum client written in Java";
     homepage = "https://github.com/hyperledger/besu";
     license = licenses.asl20;
-    sourceProvenance = with sourceTypes; [binaryBytecode];
+    mainProgram = "besu";
     platforms = ["x86_64-linux"];
+    sourceProvenance = with sourceTypes; [binaryBytecode];
   };
 }

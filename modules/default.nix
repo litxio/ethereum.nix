@@ -7,14 +7,15 @@
   flake.nixosModules.default = {
     imports = [
       ./backup
-      ./restore
+      ./erigon
       ./geth
       ./geth-bootnode
+      ./mev-boost
       ./nethermind
-      ./erigon
       ./prysm-beacon
       ./prysm-validator
       ./mev-boost
+      ./restore
     ];
   };
 }

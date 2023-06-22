@@ -112,8 +112,8 @@ with lib; {
   };
 
   user = mkOption {
-    type = types.str;
-    default = "prysm";
+    type = types.nullOr types.str;
+    default = null;
     description = mdDoc "User to run the systemd service.";
   };
 }

@@ -4,16 +4,14 @@
   pkgs,
   ...
 }: let
+  modulesLib = import ../lib.nix lib;
+
   inherit (lib.lists) optionals findFirst;
   inherit (lib.strings) hasPrefix;
-  inherit (lib.attrsets) zipAttrsWith mapAttrsRecursive optionalAttrs;
-  inherit (lib) mdDoc flatten nameValuePair filterAttrs mapAttrs mapAttrs' mapAttrsToList;
-  inherit (lib) optionalString literalExpression mkEnableOption mkIf mkBefore mkOption mkMerge types concatStringsSep;
-
-  modulesLib = import ../lib.nix {inherit lib pkgs;};
-  inherit (modulesLib) mkArgs baseServiceConfig foldListToAttrs scripts;
-
-  settingsFormat = pkgs.formats.yaml {};
+  inherit (lib.attrsets) zipAttrsWith;
+  inherit (lib) flatten nameValuePair filterAttrs mapAttrs' mapAttrsToList;
+  inherit (lib) mkIf mkMerge concatStringsSep;
+  inherit (modulesLib) mkArgs baseServiceConfig;
 
   eachValidator = config.services.ethereum.prysm-validator;
 in {
@@ -33,19 +31,20 @@ in {
             with cfg.args; {
               allowedTCPPorts =
                 [grpc-gateway-port]
-                ++ (optionals (rpc.enable) [rpc.port])
+                ++ (optionals rpc.enable [rpc.port])
                 ++ (optionals (!disable-monitoring) [monitoring-port]);
             }
         )
         openFirewall;
     in
-      zipAttrsWith (name: flatten) perService;
+      zipAttrsWith (_name: flatten) perService;
 
     systemd.services =
       mapAttrs'
       (
         validatorName: let
           serviceName = "prysm-validator-${validatorName}";
+          beaconServiceName = "prysm-beacon-${validatorName}";
         in
           cfg: let
             scriptArgs = let
@@ -59,13 +58,19 @@ in {
                 };
 
               # filter out certain args which need to be treated differently
-              specialArgs = ["--network" "--datadir" "--rpc-enable" "--graffiti" "--user"];
-              isNormalArg = name: (findFirst (arg: hasPrefix arg name) null specialArgs) == null;
-              filteredArgs = builtins.filter isNormalArg args;
-
               rpc = if cfg.args.rpc.enable
                     then "--rpc"
                     else "";
+              specialArgs = [
+                "--datadir"
+                "--graffiti"
+                "--network"
+                "--rpc-enable"
+                "--user"
+              ];
+              isNormalArg = name: (findFirst (arg: hasPrefix arg name) null specialArgs) == null;
+              filteredArgs = builtins.filter isNormalArg args;
+
               network =
                 if cfg.args.network != null
                 then "--${cfg.args.network}"
@@ -73,13 +78,15 @@ in {
               datadir =
                 if cfg.args.datadir != null
                 then "--datadir ${cfg.args.datadir}"
-                else "" ;
+                else "--datadir %S/${beaconServiceName}";
               graffiti =  # Needs quoting
                 if cfg.args.graffiti != null
                 then "--graffiti \"${cfg.args.graffiti}\""
                 else "";
+
             in ''
-              --accept-terms-of-use ${network} \
+              --accept-terms-of-use \
+              ${network} \
               ${datadir} \
               ${concatStringsSep " \\\n" filteredArgs} \
               ${lib.escapeShellArgs cfg.extraArgs}
@@ -99,9 +106,11 @@ in {
               serviceConfig = mkMerge [
                 baseServiceConfig
                 {
-                  DynamicUser = false;
-                  User = cfg.args.user;
-                  #StateDirectory = serviceName;
+                  User =
+                    if cfg.args.user != null
+                    then cfg.args.user
+                    else beaconServiceName;
+                  StateDirectory = serviceName;
                   ExecStart = "${cfg.package}/bin/validator ${scriptArgs}";
                   MemoryDenyWriteExecute = "false"; # causes a library loading error
                 }

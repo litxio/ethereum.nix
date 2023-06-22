@@ -4,16 +4,23 @@
   pkgs,
   ...
 }: let
+  modulesLib = import ../lib.nix lib;
+
   inherit (lib.lists) optionals findFirst;
   inherit (lib.strings) hasPrefix;
-  inherit (lib.attrsets) zipAttrsWith mapAttrsRecursive optionalAttrs;
-  inherit (lib) mdDoc flatten nameValuePair filterAttrs mapAttrs mapAttrs' mapAttrsToList;
-  inherit (lib) optionalString literalExpression mkEnableOption mkIf mkBefore mkOption mkMerge types concatStringsSep;
-
-  modulesLib = import ../lib.nix {inherit lib pkgs;};
-  inherit (modulesLib) mkArgs baseServiceConfig foldListToAttrs scripts;
-
-  settingsFormat = pkgs.formats.yaml {};
+  inherit (lib.attrsets) zipAttrsWith;
+  inherit
+    (lib)
+    concatStringsSep
+    filterAttrs
+    flatten
+    mapAttrs'
+    mapAttrsToList
+    mkIf
+    mkMerge
+    nameValuePair
+    ;
+  inherit (modulesLib) mkArgs baseServiceConfig;
 
   eachBeacon = config.services.ethereum.prysm-beacon;
 in {
@@ -41,7 +48,7 @@ in {
         )
         openFirewall;
     in
-      zipAttrsWith (name: flatten) perService;
+      zipAttrsWith (_name: flatten) perService;
 
     systemd.services =
       mapAttrs'
@@ -78,7 +85,7 @@ in {
               datadir =
                 if cfg.args.datadir != null
                 then "--datadir ${cfg.args.datadir}"
-                else "" ;
+                else "--datadir %S/${serviceName}";
             in ''
               --accept-terms-of-use ${network} ${jwtSecret} \
               ${datadir} \
@@ -100,9 +107,11 @@ in {
               serviceConfig = mkMerge [
                 baseServiceConfig
                 {
-                  DynamicUser = false;
-                  User = cfg.args.user;
-                  #StateDirectory = serviceName;
+                  User =
+                    if cfg.args.user != null
+                    then cfg.args.user
+                    else serviceName;
+                  StateDirectory = serviceName;
                   ExecStart = "${cfg.package}/bin/beacon-chain ${scriptArgs}";
                   MemoryDenyWriteExecute = "false"; # causes a library loading error
                 }

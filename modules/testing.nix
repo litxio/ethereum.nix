@@ -9,8 +9,6 @@
     system,
     ...
   }: let
-    cfg = config.testing;
-
     # create a custom nixpkgs with our flake packages available
     pkgs = import inputs.nixpkgs {
       inherit system;
@@ -55,6 +53,7 @@
         nameValuePair "testing-${removeSuffix ".test" name}"
         (nixos-lib.runTest {
           hostPkgs = pkgs;
+
           # speed up evaluation by skipping docs
           defaults.documentation.enable = lib.mkDefault false;
 
@@ -76,35 +75,40 @@
     ########################################
     ## Commands
     ########################################
-    config.mission-control.scripts = let
-      category = "Testing";
-    in {
-      test = {
-        inherit category;
-        description = "Build and run a test";
-        exec = ''
-          set -euo pipefail
-
+    config.devshells.default.commands = [
+      {
+        name = "tests";
+        category = "Testing";
+        help = "Build and run a test";
+        command = with lib; ''
           Help() {
                # Display Help
                echo "  Build and run a test"
                echo
                echo "  Usage:"
-               echo "    , test <name>"
-               echo "    , test <name> --interactive"
-               echo "    , test -s <system> <name>"
+               echo "    test <name>"
+               echo "    test <name> --interactive"
+               echo "    test -s <system> <name>"
                echo
                echo "  Arguments:"
                echo "    <name> If a test package is called 'testing-nethermind-basic' then <name> should be 'nethermind-basic'."
                echo
                echo "  Options:"
                echo "    -h --help          Show this screen."
+               echo "    -l --list          Show available tests."
                echo "    -s --system        Specify the target platform [default: x84_64-linux]."
                echo "    -i --interactive   Run the test interactively."
                echo
           }
 
-          ARGS=$(getopt -o ihs: --long interactive,help,system: -n ', test' -- "$@")
+          List() {
+            # Display available tests
+            echo "  List of available tests:"
+            echo
+            echo "${strings.concatMapStrings (s: "    - " + s + "\n") (attrsets.mapAttrsToList (name: _: (removePrefix "testing-" name)) config.testing.checks)}"
+          }
+
+          ARGS=$(getopt -o lihs: --long list,interactive,help,system: -n 'tests' -- "$@")
           eval set -- "$ARGS"
 
           SYSTEM="x86_64-linux"
@@ -115,6 +119,7 @@
                 -i | --interactive) DRIVER_ARGS+=("--interactive"); shift;;
                 -s | --system) SYSTEM="$2"; shift 2;;
                 -h | --help) Help; exit 0;;
+                -l | --list) List; exit 0;;
                 -- ) shift; break;;
                 * ) break;;
             esac
@@ -136,7 +141,7 @@
           set -x
           ./result/bin/nixos-test-driver "''${DRIVER_ARGS[@]}"
         '';
-      };
-    };
+      }
+    ];
   };
 }

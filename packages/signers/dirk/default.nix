@@ -16,7 +16,7 @@ buildGoModule rec {
   };
 
   runVend = true;
-  vendorSha256 = "sha256-CyOUXwAPKHGK6xt15iFMOBVgpBtn5efGecj6PckmgBk=";
+  vendorHash = "sha256-CyOUXwAPKHGK6xt15iFMOBVgpBtn5efGecj6PckmgBk=";
 
   buildInputs = [mcl bls];
 
@@ -25,6 +25,7 @@ buildGoModule rec {
   meta = {
     description = "An Ethereum 2 distributed remote keymanager, focused on security and long-term performance of signing operations";
     homepage = "https://github.com/attestantio/dirk";
+    mainProgram = "dirk";
     platforms = ["x86_64-linux"];
   };
 }

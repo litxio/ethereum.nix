@@ -20,16 +20,16 @@
 in
   buildGoModule rec {
     pname = "geth";
-    version = "1.11.5";
+    version = "1.12.0";
 
     src = fetchFromGitHub {
       owner = "ethereum";
       repo = "go-ethereum";
       rev = "v${version}";
-      sha256 = "sha256-QFqPAWW0L9cSBvnDwJKtwWT2jZFyr+zhYaS+GF/nQ9g=";
+      hash = "sha256-u1p9k12tY79kA/2Hu109czQZnurHuDJQf/w7J0c8SuU=";
     };
 
-    vendorSha256 = "sha256-Y1srOcXZ4rQ0QIQx4LdYzYG6goGk6oO30C+OW+s81z4=";
+    vendorHash = "sha256-k5MbOiJDvWFnaAPViNRHeqFa64XPZ3ImkkvkmTTscNA=";
 
     ldflags = ["-s" "-w"];
 
@@ -60,9 +60,10 @@ in
     tags = ["urfave_cli_no_docs"];
 
     meta = with lib; {
-      homepage = "https://geth.ethereum.org/";
       description = "Official golang implementation of the Ethereum protocol";
+      homepage = "https://geth.ethereum.org/";
       license = with licenses; [lgpl3Plus gpl3Plus];
+      mainProgram = "geth";
       platforms = ["x86_64-linux"];
     };
   }

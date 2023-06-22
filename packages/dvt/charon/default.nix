@@ -6,16 +6,16 @@
 }:
 buildGoModule rec {
   pname = "charon";
-  version = "0.14.4";
+  version = "0.16.0";
 
   src = fetchFromGitHub {
     owner = "ObolNetwork";
     repo = "${pname}";
     rev = "refs/tags/v${version}";
-    sha256 = "sha256-hcGg/TYp+a3cVEf7wqf1k7eco3Z3WCjtRu2KudB70BI=";
+    hash = "sha256-iwUvgvbzg6VR46j48w+kkPAx1RgBzr6GpYbIsD141bM=";
   };
 
-  vendorSha256 = "sha256-ntXD4q6VkKtbs2iMz8u7QJL9g+N40ATdS74wvFmt33M=";
+  vendorHash = "sha256-za3CaSpelCpl1CV/bLp83/Xz4xQEPGUNKK0dugCCN7s=";
 
   buildInputs = [bls mcl];
 
@@ -26,6 +26,7 @@ buildGoModule rec {
   meta = {
     description = "Charon (pronounced 'kharon') is a Proof of Stake Ethereum Distributed Validator Client";
     homepage = "https://github.com/ObolNetwork/charon";
+    mainProgram = "charon";
     platforms = ["x86_64-linux"];
   };
 }

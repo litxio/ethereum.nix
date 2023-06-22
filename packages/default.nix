@@ -9,20 +9,17 @@
 
   perSystem = {
     self',
-    inputs',
-    config,
     pkgs,
     system,
     ...
   }: let
     inherit (pkgs) callPackage;
     inherit (lib.flake) platformPkgs platformApps;
-
-    callPackageUnstable = inputs'.nixpkgs-unstable.legacyPackages.callPackage;
+    #callPackageUnstable = inputs'.nixpkgs-unstable.legacyPackages.callPackage;
   in {
     packages = platformPkgs system rec {
       # Consensus Clients
-      lighthouse = callPackageUnstable ./clients/consensus/lighthouse {};
+      lighthouse = callPackage ./clients/consensus/lighthouse {inherit foundry;};
       prysm = callPackage ./clients/consensus/prysm {inherit bls blst;};
       teku = callPackage ./clients/consensus/teku {};
 
@@ -50,17 +47,19 @@
       mev-rs = callPackage ./mev/mev-rs {};
 
       # DVT
-      charon = callPackageUnstable ./dvt/charon {inherit bls mcl;};
+      charon = callPackage ./dvt/charon {inherit bls mcl;};
       ssvnode = callPackage ./dvt/ssvnode {inherit bls mcl;};
 
       # Utils
       eth2-testnet-genesis = callPackage ./utils/eth2-testnet-genesis {inherit bls;};
       ethdo = callPackage ./utils/ethdo {inherit bls mcl;};
+      ethereal = callPackage ./utils/ethereal {inherit bls mcl;};
       sedge = callPackage ./utils/sedge {inherit bls mcl;};
+      staking-deposit-cli = callPackage ./utils/staking-deposit-cli {};
       zcli = callPackage ./utils/zcli {};
 
       # Dev
-      foundry = inputs.foundry-nix.defaultPackage.${system}.overrideAttrs (oldAttrs: {
+      foundry = inputs.foundry-nix.defaultPackage.${system}.overrideAttrs (_oldAttrs: {
         meta.platforms = [system];
       });
 
@@ -141,8 +140,11 @@
       };
 
       # utils
+      eth2-testnet-genesis.bin = "eth2-testnet-genesis";
       ethdo.bin = "ethdo";
+      ethereal.bin = "ethereal";
       sedge.bin = "sedge";
+      staking-deposit-cli.bin = "deposit";
       zcli.bin = "zcli";
     };
 

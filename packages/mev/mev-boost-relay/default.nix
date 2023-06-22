@@ -5,16 +5,16 @@
 }:
 buildGoModule rec {
   pname = "mev-boost-relay";
-  version = "0.15.2";
+  version = "0.26";
 
   src = fetchFromGitHub {
     owner = "flashbots";
     repo = "${pname}";
     rev = "v${version}";
-    sha256 = "sha256-C5A8VI+dNYoTiYVuKDTr4BAHqmZ1aNCXCbc970OYNLQ=";
+    hash = "sha256-zNYxCGDLduIpdtKAWGGexO796PAp8B0gGV/3WTToHKI=";
   };
 
-  vendorSha256 = "sha256-9PKCyeG8+SLI5KWSQAAXuXr3YvkdjyvbwstpHUCXRHU=";
+  vendorHash = "sha256-s/vM52wH5wBvzbEAQfVMmuRQ6kUT0XnmCpiLsxghHM0=";
 
   buildInputs = [blst];
 
@@ -29,6 +29,7 @@ buildGoModule rec {
   meta = {
     description = "MEV-Boost Relay for Ethereum proposer/builder separation (PBS)";
     homepage = "https://github.com/flashbots/mev-boost-relay";
+    mainProgram = "mev-boost-relay";
     platforms = ["x86_64-linux"];
   };
 }

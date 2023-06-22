@@ -1,5 +1,5 @@
 <div align="center" style="margin-top: 1em; margin-bottom: 3em;">
-  <h1>ethereum.nix = Ethereum + Nix 🫶</h1>
+  <h1>ethereum.nix = Ethereum 🫶 Nix</h1>
 </div>
 
 <p align="center">
@@ -14,249 +14,81 @@
   </a>
 </p>
 
-This is an experimental Nix project for integrating the most interesting / important projects in the Ethereum ecosystem as Nix packages / NixOS modules.
+The ultimate goal of `ethereum.nix` is to integrate the most exciting / prominent projects in the Ethereum ecosystem as Nix packages / NixOS modules.
 
-Many of the packages found ~~~~here will be added to `nixpkgs` repository once they're stable / mature enough. But for some others, more experimental ones, they can reside here.
+For the uninitiated, using `ethereum.nix` will give you the following benefits:
 
-This project is developed entirely in [Nix Flakes](https://nixos.wiki/wiki/Flakes).
+- Access to a wide range of Ethereum applications packaged with Nix, ready to run without fuss. Nix guarantees you don't have to worry about version conflicts, missing dependencies or even what state your OS is in.
+- We aim that every Ethereum application stored in the repository is constructed from its source, including all input dependencies. This approach guarantees the code's reproducibility and trustworthiness. Furthermore, with Nix, expert users can tweak and adjust the build process to any degree of detail as required.
+- We develop custom NixOS modules to streamline operations with applications such as Execution and Consensus clients (including performing backups). Moreover, we aim to introduce further abstractions that simplify everyday tasks, such as running a development environment effortlessly without needing docker.
 
-## Usage
+This project is developed entirely in [Nix Flakes](https://nixos.wiki/wiki/Flakes) (but it offers compatibility with legacy Nix thanks to [`flake-compat`](https://github.com/nix-community/flake-compat)).
 
-<details>
-  <summary>As a flake (recommended)</summary>
+## Documentation
 
-```nix
-{
-  inputs = {
-    ethereum-nix = {
-      url = "github:nix-community/ethereum.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nixpkgs.url = "nixpkgs/nixos-unstable";
-  };
+We recommend you [look at our documentation](https://nix-community.github.io/ethereum.nix/) that shows how to use `ethereum.nix` effectively.
 
-  outputs = { self, ethereum-nix, nixpkgs }: {
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        ({ pkgs, ... }: {
-          nixpkgs.overlays = [ ethereum-nix.overlays.default ];
-        })
-      ];
-    };
-  };
-}
-```
-
-</details>
-
-<details>
-  <summary>As an overlay</summary>
-
-```nix
-# configuration.nix
-{ pkgs, ... }: {
-  nixpkgs.overlays = [
-    (import "${fetchTarball "https://github.com/nix-community/ethereum.nix/archive/main.tar.gz"}/overlays.nix")
-  ];
-  environment.systemPackages = with pkgs; [
-    teku
-    lighthouse
-    # <...>
-  ];
-}
-```
-
-</details>
-
-## Setup
-
-### NixOS
-
-If you're on NixOS, chances are you know what you're doing. If you don't have installed `direnv`, clone this repository and when entering inside the folder, just execute `nix develop`. It will load a `devShell` environment ready to be used.
-
-Optional: [install direnv](https://github.com/direnv/direnv#basic-installation), so whenever you enter inside the directory, it will run `nix develop` for you automatically.
-
-### Non-NixOS
-
-To get started, run the following:
-
-1. [Install Nix](https://nixos.org/download.html):
-
-```bash
-$ curl -L https://nixos.org/nix/install | sh
-```
-
-2. Clone this repository and when entering inside the folder, just execute `nix develop`. It will load a `devShell` environment ready to be used.
-
-Optional: [install direnv](https://github.com/direnv/direnv#basic-installation), so whenever you enter inside the directory, it will run `nix develop` for you automatically.
+Any PR improving documentation is welcome.
 
 ## Development
 
+We use [`devshell`](https://github.com/numtide/devshell) to have nice development environments. Below you can find the list of available commands:
+
+```bash
+🔨 Welcome to ethereum.nix
+
+[Docs]
+
+  docs-build - Build docs
+  docs-serve - Serve docs
+
+[Testing]
+
+  tests      - Build and run a test
+
+[Tools]
+
+  fmt        - Format the source tree
+
+[general commands]
+
+  menu       - prints this menu
+
+direnv: export +DEVSHELL_DIR +IN_NIX_SHELL +NIXPKGS_PATH +PRJ_DATA_DIR +PRJ_ROOT +name ~PATH ~XDG_DATA_DIRS
+```
+
+### Requirements
+
+To make the most of this repository, you should have the following installed:
+
+- [Nix](https://nixos.org/)
+- [Direnv](https://direnv.net/)
+
+After cloning this repository and entering inside, run `direnv allow` when prompted, and you will be met with the previous prompt.
+
 ### Docs
 
-To serve the docs run `, docs-serve`. You can edit the docs in `./docs`.
+To build the docs locally, run `docs-build`. The output will be inside of `./result`.
 
-To build the docs run `, docs-build`. The output will be inside of `./result`.
+Run `docs-serve` to serve the docs locally (after building them previously). You can edit the docs in `./docs`.
 
 ### Running tests
 
-To run all tests you can use `nix flake check`, it will build all packages and run all tests.
+To run all tests, you can use `check` (alias for `nix flake check`); it will build all packages and run all tests.
 
-To execute a specific test you can use `, test -h` which will provide more information.
+You can use `tests -h` to execute a specific test, which will provide more information.
 
 ### Formatting
 
-You can manually format using the `format` command like so:
-
-```bash
-, fmt
-```
-
-## Applications
-
-> Note: every command has a local and a remote variant. The local variant requires
-> that the command is run from within the cloned repo. The remote variant can be run
-> from wherever.
->
-> Local: nix run .#my-app-name
->
-> Remote: nix run github:nix-community/ethereum.nix#my-app-name
->
-> For brevity and consistency, all the commands are listed in the local variant
-
-### Executables provided
-
-#### Consensus Clients
-
-- [prysm](https://github.com/prysmaticlabs/prysm):
-  - beacon-chain: `nix run .#prysm-beacon-chain`
-  - client-stats: `nix run .#prysm-client-stats`
-  - prysmctl: `nix run .#prysm-ctl`
-  - validator: `nix run .#prysm-validator`
-- [teku](https://github.com/ConsenSys/teku): `nix run .#teku`
-- [lighthouse](https://github.com/sigp/lighthouse): `nix run .#lighthouse`
-
-#### Execution Clients
-
-- [besu](https://github.com/hyperledger/besu): `nix run .#besu`
-- [erigon](https://github.com/ledgerwatch/erigon): `nix run .#erigon`
-- [geth](https://github.com/ethereum/go-ethereum):
-  - abidump: `nix run .#abidump`
-  - abigen: `nix run .#abigen`
-  - bootnode: `nix run .#bootnode`
-  - clef: `nix run .#clef`
-  - devp2p: `nix run .#devp2p`
-  - ethkey: `nix run .#ethkey`
-  - evm: `nix run .#evm`
-  - faucet: `nix run .#faucet`
-  - geth: `nix run .#geth`
-  - rlpdump: `nix run .#rlpdump`
-
-#### Validators
-
-- [vouch](https://github.com/attestantio/vouch): `nix run .#vouch`
-
-### MEV Utilities
-
-- [mev-boost](https://github.com/flashbots/mev-boost/): `nix run .#mev-boost`
-
-#### Signers
-
-- [web3signer](https://github.com/ConsenSys/web3signer): `nix run .#web3signer`
-- [dirk](https://github.com/attestantio/dirk): `nix run .#dirk`
-
-#### Utilities / Tools / Other
-
-- [ethdo](https://github.com/wealdtech/ethdo): `nix run .#ethdo`
-
-## NixOS Modules
-
-We provide modules for configuring and running various services. Some process arguments have been nix'ified. For those
-which aren't there is typically and an `extraArgs` array that can be passed to the process.
-
-### Geth
-
-```nix
-services.ethereum.geth.mainnet = {
-    enable = true;
-    openFirewall = true;
-    service.supplementaryGroups = [users.groups.keys.name];
-};
-
-services.ethereum.geth.goerli = {
-    enable = true;
-    openFirewall = true;
-    args = {
-      network = "goerli";
-      dataDir = "/data/ethereum/goerli/geth";
-      authrpc.jwtsecret = sops.secrets.geth_jwt_secret.path;
-      service.supplementaryGroups = [users.groups.keys.name];
-    }
-};
-```
-
-### Prysm Beacon Chain
-
-```nix
-services.ethereum.prysm.beacon.mainnet = {
-    enable = true;
-    args = {
-      jwt-secret = secrets.prysm_jwt_secret.path;
-      service.supplementaryGroups = [users.groups.keys.name];
-    };
-};
-
-services.ethereum.prysm.beacon.goerli = {
-    enable = true;
-    args = {
-      network = "goerli";
-      dataDir = "/data/ethereum/goerli/prysm-beacon";
-      jwt-secret = secrets.prysm_jwt_secret.path;
-      service.supplementaryGroups = [users.groups.keys.name];
-      checkpoint.sync-url = "https://goerli.checkpoint-sync.ethpandaops.io";
-      genesis.beacon-api-url = "https://goerli.checkpoint-sync.ethpandaops.io";
-    };
-};
-```
-
-### Erigon
-
-```nix
-services.ethereum.erigon.sepolia = {
-  enable = true;
-  openFirewall = true;
-  args = {
-    chain = "sepolia";
-    datadir = "/data/ethereum/sepolia/erigon";
-    http = {
-      enable = true;
-      addr = "0.0.0.0";
-      api = ["eth" "erigon" "engine" "sealer" "net"];
-      vhosts = ["localhost" "dione"];
-    };
-  };
-};
-```
-
-## Libraries
-
-Some crypto projects may need specific libraries to be available to compile properly. Below you can find the list of included ones:
-
-### Libraries provided
-
-- [evmc](https://github.com/ethereum/evmc/)
-- [bls](https://github.com/herumi/bls)
-- [blst](https://github.com/supranational/blst)
-- [mcl](https://github.com/herumi/mcl)
+You can manually format the source using the `fmt` command.
 
 ## Contribute
 
-We welcome any kind of contribution or support to this project but before to do so:
+We welcome any contribution or support to this project, but before doing so:
 
 - Make sure you have read the [contribution guide](/.github/CONTRIBUTING.md) for more details on how to submit a good PR (pull request).
 
-In addition you can always:
+In addition, you can always:
 
 - Add a [GitHub Star 🌟](https://github.com/nix-community/ethereum.nix/stargazers) to the project.
 - Tweet about this project.
@@ -265,6 +97,6 @@ In addition you can always:
 
 This project has been inspired by the awesome work of:
 
-- [`cosmos.nix`](https://github.com/informalsystems/cosmos.nix) by [Informal Systems](https://github.com/informalsystems) which this repository takes inspiration on it's README and several other places.
+- [`cosmos.nix`](https://github.com/informalsystems/cosmos.nix) by [Informal Systems](https://github.com/informalsystems), which this repository takes inspiration from its README and several other places.
 
 - [willruggiano](https://github.com/willruggiano) on his work done in [`eth-nix`](https://github.com/willruggiano/eth-nix) repository that served as the initial kick-start for working on this project.

@@ -1,21 +1,21 @@
 {
   bls,
   mcl,
-  buildGoModule,
+  buildGo119Module,
   fetchFromGitHub,
 }:
-buildGoModule rec {
+buildGo119Module rec {
   pname = "ssv";
-  version = "0.5.1";
+  version = "0.5.4";
 
   src = fetchFromGitHub {
     owner = "bloxapp";
     repo = "${pname}";
     rev = "v${version}";
-    sha256 = "sha256-Iwi9+tYg0tL8LdI7vLbdFjNEJmE7DWZeE0RG29X80F8=";
+    hash = "sha256-tMk91zKURbqREdeBnz6bc2UqKOBZA1TY6ueJdU0vAFM=";
   };
 
-  vendorSha256 = "sha256-u5/TVnpSBOdt3Hq3+JVVyfUwBy1iw51JRdtlB799nXY=";
+  vendorHash = "sha256-u5/TVnpSBOdt3Hq3+JVVyfUwBy1iw51JRdtlB799nXY=";
 
   buildInputs = [bls mcl];
 
@@ -25,5 +25,6 @@ buildGoModule rec {
     description = "Secret-Shared-Validator(SSV) for ethereum staking";
     homepage = "https://github.com/bloxapp/ssv";
     platforms = ["x86_64-linux"];
+    mainProgram = "ssvnode";
   };
 }

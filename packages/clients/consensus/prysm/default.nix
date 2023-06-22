@@ -7,16 +7,16 @@
 }:
 buildGoModule rec {
   pname = "prysm";
-  version = "4.0.1";
+  version = "4.0.6";
 
   src = fetchFromGitHub {
     owner = "prysmaticlabs";
     repo = pname;
     rev = "v${version}";
-    hash = "sha256-cLOcPE8zXypDev2AnRdnkDzwD88lnX1TOM8kC+8LA3M=";
+    hash = "sha256-UW81n5As/1hGDT2SddhryTiWLjrRCEEIkwaQy06EToE=";
   };
 
-  vendorSha256 = "sha256-U9PrDKTuQ46qZqUN8Wlh34sF7Uh2WsjouHIQfPw0Ypo=";
+  vendorHash = "sha256-ORsmC+TvvXb2tfTdHp3NHc/tWNe4ZhnSVe6HPDU2X/s=";
 
   buildInputs = [bls blst libelf];
 
@@ -32,6 +32,7 @@ buildGoModule rec {
   meta = {
     description = "Go implementation of Ethereum proof of stake";
     homepage = "https://github.com/prysmaticlabs/prysm";
+    mainProgram = "beacon-chain";
     platforms = ["x86_64-linux"];
   };
 }

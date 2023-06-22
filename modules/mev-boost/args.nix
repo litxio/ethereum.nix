@@ -1,7 +1,7 @@
 lib:
 with lib; {
   network = mkOption {
-    type = types.nullOr (types.enum ["goerli" "sepolia"]);
+    type = types.nullOr (types.enum ["mainnet" "goerli" "sepolia" "zhejiang"]);
     default = null;
     description = mdDoc "The network to connect to. Mainnet (null) is the default ethereum network.";
   };
@@ -77,11 +77,9 @@ with lib; {
     description = mdDoc "add a 'service=...' tag to all log messages";
   };
 
-
   addr = mkOption {
     type = types.str;
     default = "localhost:18550";
     description = mdDoc "listen-address for mev-boost server (default 'localhost:18550')";
   };
-
 }

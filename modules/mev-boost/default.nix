@@ -4,16 +4,13 @@
   pkgs,
   ...
 }: let
-  inherit (lib.lists) optionals findFirst;
+  modulesLib = import ../lib.nix lib;
+
+  inherit (lib.lists) findFirst;
   inherit (lib.strings) hasPrefix;
-  inherit (lib.attrsets) zipAttrsWith mapAttrsRecursive optionalAttrs;
-  inherit (lib) mdDoc flatten nameValuePair filterAttrs mapAttrs mapAttrs' mapAttrsToList;
-  inherit (lib) optionalString literalExpression mkEnableOption mkIf mkBefore mkOption mkMerge types concatStringsSep;
-
-  modulesLib = import ../lib.nix {inherit lib pkgs;};
+  inherit (lib) nameValuePair mapAttrs';
+  inherit (lib) mkIf mkMerge concatStringsSep;
   inherit (modulesLib) mkArgs baseServiceConfig;
-
-  settingsFormat = pkgs.formats.yaml {};
 
   eachMevBoost = config.services.ethereum.mev-boost;
 in {
@@ -23,7 +20,6 @@ in {
   ###### implementation
 
   config = mkIf (eachMevBoost != {}) {
-
     systemd.services =
       mapAttrs'
       (
@@ -45,7 +41,17 @@ in {
                 };
 
               # filter out certain args which need to be treated differently
-              specialArgs = ["-goerli -mainnet -sepolia -relays -relay -relay-monitors -relay-monitor"];
+              specialArgs = [
+                "--network"
+                "-goerli"
+                "-mainnet"
+                "-relay-monitor"
+                "-relay-monitors"
+                "-relay"
+                "-relays"
+                "-sepolia"
+                "-zhejiang"
+              ];
               isNormalArg = name: (findFirst (arg: hasPrefix arg name) null specialArgs) == null;
               filteredArgs = builtins.filter isNormalArg args;
 
@@ -59,7 +65,6 @@ in {
                 if cfg.args.relay-monitors != null
                 then "-relay-monitors" + (concatStringsSep "," cfg.args.relay-monitors)
                 else "";
-
             in ''
               ${network} \
               ${concatStringsSep " \\\n" filteredArgs} \
