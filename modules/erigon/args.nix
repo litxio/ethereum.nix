@@ -14,7 +14,7 @@ with lib; {
     '';
   };
 
-  externalcl = mkEnableOption (mdDoc "enables external consensus");
+  internalcl = mkEnableOption (mdDoc "enables internal consensus");
 
   chain = mkOption {
     type = types.enum [
