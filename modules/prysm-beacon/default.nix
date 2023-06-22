@@ -108,14 +108,14 @@ in {
                 baseServiceConfig
                 {
                   User =
-                    if cfg.args.user != null
-                    then cfg.args.user
+                    if cfg.user != null
+                    then cfg.user
                     else serviceName;
                   StateDirectory = serviceName;
                   ExecStart = "${cfg.package}/bin/beacon-chain ${scriptArgs}";
                   MemoryDenyWriteExecute = "false"; # causes a library loading error
                 }
-                (mkIf (cfg.args.user != null) {
+                (mkIf (cfg.user != null) {
                   DynamicUser = false;
                 })
                 (mkIf (cfg.args.jwt-secret != null) {

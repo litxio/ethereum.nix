@@ -111,9 +111,4 @@ with lib; {
     description = mdDoc "Data directory for the databases.";
   };
 
-  user = mkOption {
-    type = types.nullOr types.str;
-    default = null;
-    description = mdDoc "User to run the systemd service.";
-  };
 }

@@ -89,10 +89,4 @@ with lib; {
     default = null;
     description = mdDoc "String to include in proposed blocks";
   };
-
-  user = mkOption {
-    type = types.nullOr types.str;
-    default = null;
-    description = mdDoc "User to run the systemd service.";
-  };
 }

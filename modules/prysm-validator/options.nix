@@ -30,6 +30,12 @@
         description = lib.mdDoc "Open ports in the firewall for any enabled networking services";
       };
 
+      user = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = mdDoc "User to run the systemd service.";
+      };
+
       # mixin backup options
       backup = let
         inherit (import ../backup/lib.nix lib) options;
