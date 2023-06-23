@@ -77,7 +77,7 @@ in {
               datadir =
                 if cfg.args.datadir != null
                 then "--datadir ${cfg.args.datadir}"
-                else "--datadir %S/${beaconServiceName}";
+                else "--datadir %S/${serviceName}";
               graffiti =  # Needs quoting
                 if cfg.args.graffiti != null
                 then "--graffiti \"${cfg.args.graffiti}\""
