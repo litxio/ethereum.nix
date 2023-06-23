@@ -36,6 +36,12 @@
         description = mdDoc "User to run the systemd service.";
       };
 
+      group = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = mdDoc "Primary group for the systemd service.";
+      };
+
       # mixin backup options
       backup = let
         inherit (import ../backup/lib.nix lib) options;

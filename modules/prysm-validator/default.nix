@@ -117,6 +117,9 @@ in {
                 (mkIf (cfg.user != null) {
                   DynamicUser = false;
                 })
+                (mkIf (cfg.group != null) {
+                  Group = cfg.group;
+                })
               ];
             })
       )

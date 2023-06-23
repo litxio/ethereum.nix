@@ -118,6 +118,9 @@ in {
                 (mkIf (cfg.user != null) {
                   DynamicUser = false;
                 })
+                (mkIf (cfg.group != null) {
+                  Group = cfg.group;
+                })
                 (mkIf (cfg.args.jwt-secret != null) {
                   LoadCredential = ["jwt-secret:${cfg.args.jwt-secret}"];
                 })
