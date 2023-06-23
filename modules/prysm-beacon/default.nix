@@ -107,16 +107,13 @@ in {
               serviceConfig = mkMerge [
                 baseServiceConfig
                 {
-                  User =
-                    if cfg.user != null
-                    then cfg.user
-                    else serviceName;
                   StateDirectory = serviceName;
                   ExecStart = "${cfg.package}/bin/beacon-chain ${scriptArgs}";
                   MemoryDenyWriteExecute = "false"; # causes a library loading error
                 }
                 (mkIf (cfg.user != null) {
                   DynamicUser = false;
+                  User = cfg.user;
                 })
                 (mkIf (cfg.group != null) {
                   Group = cfg.group;
