@@ -66,6 +66,7 @@ in {
                 "--graffiti"
                 "--network"
                 "--rpc-enable"
+                "--wallet-password-file"
               ];
               isNormalArg = name: (findFirst (arg: hasPrefix arg name) null specialArgs) == null;
               filteredArgs = builtins.filter isNormalArg args;
@@ -82,11 +83,16 @@ in {
                 if cfg.args.graffiti != null
                 then "--graffiti \"${cfg.args.graffiti}\""
                 else "";
+              wallet-password-file =
+                if cfg.args.wallet-password-file != null
+                then "--wallet-password-file %d/wallet-password"
+                else "";
 
             in ''
               --accept-terms-of-use \
               ${network} \
               ${datadir} \
+              ${wallet-password-file} \
               ${concatStringsSep " \\\n" filteredArgs} \
               ${lib.escapeShellArgs cfg.extraArgs}
             '';
@@ -109,6 +115,9 @@ in {
                   ExecStart = "${cfg.package}/bin/validator ${scriptArgs}";
                   MemoryDenyWriteExecute = "false"; # causes a library loading error
                 }
+                (mkIf (cfg.args.wallet-password-file != null) {
+                  LoadCredential = ["wallet-password:${cfg.args.wallet-password-file}"];
+                })
                 (mkIf (cfg.user != null) {
                   DynamicUser = false;
                   User = cfg.user;
