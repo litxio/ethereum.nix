@@ -66,7 +66,6 @@ in {
                 "--graffiti"
                 "--network"
                 "--rpc-enable"
-                "--user"
               ];
               isNormalArg = name: (findFirst (arg: hasPrefix arg name) null specialArgs) == null;
               filteredArgs = builtins.filter isNormalArg args;
@@ -120,6 +119,7 @@ in {
                 (mkIf (cfg.group != null) {
                   Group = cfg.group;
                 })
+                cfg.extraServiceConfig
               ];
             })
       )

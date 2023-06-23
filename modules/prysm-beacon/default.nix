@@ -68,7 +68,7 @@ in {
                 };
 
               # filter out certain args which need to be treated differently
-              specialArgs = ["--network" "--jwt-secret" "--datadir" "--user"];
+              specialArgs = ["--network" "--jwt-secret" "--datadir"];
               isNormalArg = name: (findFirst (arg: hasPrefix arg name) null specialArgs) == null;
               filteredArgs = builtins.filter isNormalArg args;
 
@@ -124,6 +124,7 @@ in {
                 (mkIf (cfg.args.jwt-secret != null) {
                   LoadCredential = ["jwt-secret:${cfg.args.jwt-secret}"];
                 })
+                cfg.extraServiceConfig
               ];
             })
       )

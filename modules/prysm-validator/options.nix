@@ -42,6 +42,12 @@
         description = mdDoc "Primary group for the systemd service.";
       };
 
+      extraServiceConfig = mkOption {
+        type = types.attrsOf types.str;
+        default = {};
+        description = mdDoc "Extra settings for the systemd [Service] stanza.";
+      };
+
       # mixin backup options
       backup = let
         inherit (import ../backup/lib.nix lib) options;
