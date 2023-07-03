@@ -95,7 +95,7 @@ in {
             in ''
               --datadir %S/${serviceName} \
               ${jwtsecret} \
-              ${concatStringsSep " \\\n" args} \
+              ${concatStringsSep " \\\n" filteredArgs} \
               ${lib.escapeShellArgs cfg.extraArgs}
             '';
           in
