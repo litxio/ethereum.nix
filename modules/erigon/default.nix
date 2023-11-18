@@ -84,7 +84,7 @@ in {
                   inherit (cfg) args;
                 };
 
-              specialArgs = ["--authrpc.jwtsecret"];
+              specialArgs = ["--authrpc.jwtsecret" "--dataDir"];
               isNormalArg = name: (findFirst (arg: hasPrefix arg name) null specialArgs) == null;
               filteredArgs = builtins.filter isNormalArg args;
 
