@@ -90,10 +90,15 @@ in {
 
               jwtsecret =
                 if cfg.args.authrpc.jwtsecret != null
-                then "--authrpc.jwtsecret %d/jwt-secret"
-                else "";
+                  then "--authrpc.jwtsecret %d/jwt-secret"
+                  else "";
+              dataDir =
+                if cfg.args.dataDir != null
+                  then cfg.args.dataDir
+                  else "--datadir %S/${serviceName}";
+
             in ''
-              --datadir %S/${serviceName} \
+              --datadir ${dataDir} \
               ${jwtsecret} \
               ${concatStringsSep " \\\n" filteredArgs} \
               ${lib.escapeShellArgs cfg.extraArgs}
@@ -110,9 +115,10 @@ in {
                 {
                   User = serviceName;
                   StateDirectory = serviceName;
-                  ExecStartPre = mkIf cfg.subVolume (mkBefore [
-                    "+${scripts.setupSubVolume} /var/lib/private/${serviceName}"
-                  ]);
+                  ExecStartPre =
+                    mkIf (cfg.subVolume && cfg.args.dataDir == null) (mkBefore [
+                      "+${scripts.setupSubVolume} /var/lib/private/${serviceName}"
+                    ]);
                   ExecStart = "${cfg.package}/bin/erigon ${scriptArgs}";
                 }
                 (mkIf (cfg.args.authrpc.jwtsecret != null) {

@@ -1,5 +1,11 @@
 lib:
 with lib; {
+  dataDir = mkOption {
+    type = types.nullOr types.str;
+    default = null;
+    description = mdDoc "Data directory.  If null, use systemd state directory.";
+  };
+
   port = mkOption {
     type = types.port;
     default = 30303;
