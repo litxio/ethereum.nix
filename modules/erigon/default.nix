@@ -120,6 +120,8 @@ in {
                       "+${scripts.setupSubVolume} /var/lib/private/${serviceName}"
                     ]);
                   ExecStart = "${cfg.package}/bin/erigon ${scriptArgs}";
+                  ReadWritePaths =
+                    mkIf (cfg.args.dataDir != null) cfg.args.dataDir;
                 }
                 (mkIf (cfg.args.authrpc.jwtsecret != null) {
                   LoadCredential = ["jwt-secret:${cfg.args.authrpc.jwtsecret}"];
