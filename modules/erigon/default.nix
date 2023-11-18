@@ -95,7 +95,7 @@ in {
               dataDir =
                 if cfg.args.dataDir != null
                   then cfg.args.dataDir
-                  else "--datadir %S/${serviceName}";
+                  else "%S/${serviceName}";
 
             in ''
               --datadir ${dataDir} \
