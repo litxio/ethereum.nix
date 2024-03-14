@@ -83,24 +83,13 @@ in {
                   inherit pathReducer opts;
                   inherit (cfg) args;
                 };
-
-              specialArgs = ["--authrpc.jwtsecret" "--dataDir"];
-              isNormalArg = name: (findFirst (arg: hasPrefix arg name) null specialArgs) == null;
-              filteredArgs = builtins.filter isNormalArg args;
-
-              jwtsecret =
-                if cfg.args.authrpc.jwtsecret != null
-                  then "--authrpc.jwtsecret %d/jwt-secret"
-                  else "";
-              dataDir =
-                if cfg.args.dataDir != null
-                  then cfg.args.dataDir
-                  else "%S/${serviceName}";
-
+              datadir =
+                if cfg.args.datadir != null
+                then "--datadir ${cfg.args.datadir}"
+                else "--datadir %S/${serviceName}";
             in ''
-              --datadir ${dataDir} \
-              ${jwtsecret} \
-              ${concatStringsSep " \\\n" filteredArgs} \
+              ${datadir} \
+              ${concatStringsSep " \\\n" args} \
               ${lib.escapeShellArgs cfg.extraArgs}
             '';
           in

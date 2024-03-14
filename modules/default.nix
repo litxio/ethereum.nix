@@ -10,8 +10,11 @@
       ./erigon
       ./geth
       ./geth-bootnode
+      ./lighthouse-beacon
+      ./lighthouse-validator
       ./mev-boost
       ./nethermind
+      ./nimbus-beacon
       ./prysm-beacon
       ./prysm-validator
       ./mev-boost

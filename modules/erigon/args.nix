@@ -1,9 +1,9 @@
 lib:
 with lib; {
-  dataDir = mkOption {
+  datadir = mkOption {
     type = types.nullOr types.str;
     default = null;
-    description = mdDoc "Data directory.  If null, use systemd state directory.";
+    description = mdDoc "Data directory for Erigon. Defaults to '%S/erigon-\<name\>', which generally resolves to /var/lib/erigon-\<name\>.";
   };
 
   port = mkOption {
@@ -27,6 +27,7 @@ with lib; {
       "mainnet"
       "rinkeby"
       "goerli"
+      "holesky"
       "sokol"
       "fermion"
       "mumbai"
