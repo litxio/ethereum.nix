@@ -105,12 +105,12 @@ in {
                   User = serviceName;
                   StateDirectory = serviceName;
                   ExecStartPre =
-                    mkIf (cfg.subVolume && cfg.args.dataDir == null) (mkBefore [
+                    mkIf (cfg.subVolume && cfg.args.datadir == null) (mkBefore [
                       "+${scripts.setupSubVolume} /var/lib/private/${serviceName}"
                     ]);
                   ExecStart = "${cfg.package}/bin/erigon ${scriptArgs}";
                   ReadWritePaths =
-                    mkIf (cfg.args.dataDir != null) cfg.args.dataDir;
+                    mkIf (cfg.args.datadir != null) cfg.args.datadir;
                 }
                 (mkIf (cfg.args.authrpc.jwtsecret != null) {
                   LoadCredential = ["jwt-secret:${cfg.args.authrpc.jwtsecret}"];
