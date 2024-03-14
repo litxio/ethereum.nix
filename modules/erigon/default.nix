@@ -85,7 +85,7 @@ in {
                   inherit (cfg) args;
                 };
 
-              specialArgs = ["--authrpc.jwtsecret" "--dataDir"];
+              specialArgs = ["--authrpc.jwtsecret" "--datadir"];
               isNormalArg = name: (findFirst (arg: hasPrefix arg name) null specialArgs) == null;
               filteredArgs = builtins.filter isNormalArg args;
 
@@ -96,8 +96,8 @@ in {
                   else "";
               # If provided: use the provided path. If not: use the systemd statedir
               datadir =
-                if cfg.args.dataDir != null
-                  then cfg.args.dataDir
+                if cfg.args.datadir != null
+                  then cfg.args.datadir
                   else "%S/${serviceName}";
 
             in ''
