@@ -71,9 +71,10 @@ in {
           cfg: let
             scriptArgs = let
               # replace enable flags like --http.enable with just --http
-              pathReducer = path: let
-                arg = concatStringsSep "." (lib.lists.remove "enable" path);
-              in "--${arg}";
+              pathReducer =
+                path:
+                  let arg = concatStringsSep "." (lib.lists.remove "enable" path);
+                   in "--${arg}";
 
               # generate flags
               args = let
@@ -83,13 +84,26 @@ in {
                   inherit pathReducer opts;
                   inherit (cfg) args;
                 };
+
+              specialArgs = ["--authrpc.jwtsecret" "--dataDir"];
+              isNormalArg = name: (findFirst (arg: hasPrefix arg name) null specialArgs) == null;
+              filteredArgs = builtins.filter isNormalArg args;
+
+              # If provided, load from systemd credentials dir (see LoadCredential below).
+              jwtsecret =
+                if cfg.args.authrpc.jwtsecret != null
+                  then "--authrpc.jwtsecret %d/jwt-secret"
+                  else "";
+              # If provided: use the provided path. If not: use the systemd statedir
               datadir =
-                if cfg.args.datadir != null
-                then "--datadir ${cfg.args.datadir}"
-                else "--datadir %S/${serviceName}";
+                if cfg.args.dataDir != null
+                  then cfg.args.dataDir
+                  else "%S/${serviceName}";
+
             in ''
-              ${datadir} \
-              ${concatStringsSep " \\\n" args} \
+              --datadir ${datadir} \
+              ${jwtsecret}
+              ${concatStringsSep " \\\n" filteredArgs} \
               ${lib.escapeShellArgs cfg.extraArgs}
             '';
           in
