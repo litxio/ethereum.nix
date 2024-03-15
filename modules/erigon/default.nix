@@ -102,7 +102,7 @@ in {
 
             in ''
               --datadir ${datadir} \
-              ${jwtsecret}
+              ${jwtsecret} \
               ${concatStringsSep " \\\n" filteredArgs} \
               ${lib.escapeShellArgs cfg.extraArgs}
             '';
