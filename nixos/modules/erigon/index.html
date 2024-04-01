@@ -1062,6 +1062,24 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#servicesethereumerigonnameextraserviceconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      services.ethereum.erigon.&lt;name&gt;.extraServiceConfig
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servicesethereumerigonnamegroup" class="md-nav__link">
+    <span class="md-ellipsis">
+      services.ethereum.erigon.&lt;name&gt;.group
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#servicesethereumerigonnameopenfirewall" class="md-nav__link">
     <span class="md-ellipsis">
       services.ethereum.erigon.&lt;name&gt;.openFirewall
@@ -1092,6 +1110,15 @@
   <a href="#servicesethereumerigonnamesubvolume" class="md-nav__link">
     <span class="md-ellipsis">
       services.ethereum.erigon.&lt;name&gt;.subVolume
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servicesethereumerigonnameuser" class="md-nav__link">
+    <span class="md-ellipsis">
+      services.ethereum.erigon.&lt;name&gt;.user
     </span>
   </a>
   
@@ -1849,6 +1876,24 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#servicesethereumerigonnameextraserviceconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      services.ethereum.erigon.&lt;name&gt;.extraServiceConfig
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servicesethereumerigonnamegroup" class="md-nav__link">
+    <span class="md-ellipsis">
+      services.ethereum.erigon.&lt;name&gt;.group
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#servicesethereumerigonnameopenfirewall" class="md-nav__link">
     <span class="md-ellipsis">
       services.ethereum.erigon.&lt;name&gt;.openFirewall
@@ -1879,6 +1924,15 @@
   <a href="#servicesethereumerigonnamesubvolume" class="md-nav__link">
     <span class="md-ellipsis">
       services.ethereum.erigon.&lt;name&gt;.subVolume
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servicesethereumerigonnameuser" class="md-nav__link">
+    <span class="md-ellipsis">
+      services.ethereum.erigon.&lt;name&gt;.user
     </span>
   </a>
   
@@ -2672,9 +2726,51 @@
 </tr>
 </tbody>
 </table>
+<h2 id="servicesethereumerigonnameextraserviceconfig"><code>services.ethereum.erigon.&lt;name&gt;.extraServiceConfig</code><a class="headerlink" href="#servicesethereumerigonnameextraserviceconfig" title="Permanent link">&para;</a></h2>
+<p><strong>Snippet</strong></p>
+<div class="language-nix highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-35-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1"></a>services<span class="o">.</span>ethereum<span class="o">.</span>erigon<span class="o">.</span><span class="l">&lt;name&gt;</span><span class="o">.</span>extraServiceConfig
+</span></code></pre></div></td></tr></table></div>
+<p><strong>Parameter</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>attribute set of string</td>
+<td></td>
+<td>{ }</td>
+</tr>
+</tbody>
+</table>
+<h2 id="servicesethereumerigonnamegroup"><code>services.ethereum.erigon.&lt;name&gt;.group</code><a class="headerlink" href="#servicesethereumerigonnamegroup" title="Permanent link">&para;</a></h2>
+<p><strong>Snippet</strong></p>
+<div class="language-nix highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-36-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1"></a>services<span class="o">.</span>ethereum<span class="o">.</span>erigon<span class="o">.</span><span class="l">&lt;name&gt;</span><span class="o">.</span>group
+</span></code></pre></div></td></tr></table></div>
+<p><strong>Parameter</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>null or string</td>
+<td></td>
+<td>null</td>
+</tr>
+</tbody>
+</table>
 <h2 id="servicesethereumerigonnameopenfirewall"><code>services.ethereum.erigon.&lt;name&gt;.openFirewall</code><a class="headerlink" href="#servicesethereumerigonnameopenfirewall" title="Permanent link">&para;</a></h2>
 <p><strong>Snippet</strong></p>
-<div class="language-nix highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-35-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1"></a>services<span class="o">.</span>ethereum<span class="o">.</span>erigon<span class="o">.</span><span class="l">&lt;name&gt;</span><span class="o">.</span>openFirewall
+<div class="language-nix highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-37-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1"></a>services<span class="o">.</span>ethereum<span class="o">.</span>erigon<span class="o">.</span><span class="l">&lt;name&gt;</span><span class="o">.</span>openFirewall
 </span></code></pre></div></td></tr></table></div>
 <p><strong>Parameter</strong></p>
 <table>
@@ -2695,7 +2791,7 @@
 </table>
 <h2 id="servicesethereumerigonnamepackage"><code>services.ethereum.erigon.&lt;name&gt;.package</code><a class="headerlink" href="#servicesethereumerigonnamepackage" title="Permanent link">&para;</a></h2>
 <p><strong>Snippet</strong></p>
-<div class="language-nix highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-36-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1"></a>services<span class="o">.</span>ethereum<span class="o">.</span>erigon<span class="o">.</span><span class="l">&lt;name&gt;</span><span class="o">.</span>package
+<div class="language-nix highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-38-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1"></a>services<span class="o">.</span>ethereum<span class="o">.</span>erigon<span class="o">.</span><span class="l">&lt;name&gt;</span><span class="o">.</span>package
 </span></code></pre></div></td></tr></table></div>
 <p><strong>Parameter</strong></p>
 <table>
@@ -2716,7 +2812,7 @@
 </table>
 <h2 id="servicesethereumerigonnameservicesupplementarygroups"><code>services.ethereum.erigon.&lt;name&gt;.service.supplementaryGroups</code><a class="headerlink" href="#servicesethereumerigonnameservicesupplementarygroups" title="Permanent link">&para;</a></h2>
 <p><strong>Snippet</strong></p>
-<div class="language-nix highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-37-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1"></a>services<span class="o">.</span>ethereum<span class="o">.</span>erigon<span class="o">.</span><span class="l">&lt;name&gt;</span><span class="o">.</span>service<span class="o">.</span>supplementaryGroups
+<div class="language-nix highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-39-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1"></a>services<span class="o">.</span>ethereum<span class="o">.</span>erigon<span class="o">.</span><span class="l">&lt;name&gt;</span><span class="o">.</span>service<span class="o">.</span>supplementaryGroups
 </span></code></pre></div></td></tr></table></div>
 <p><strong>Parameter</strong></p>
 <table>
@@ -2737,7 +2833,7 @@
 </table>
 <h2 id="servicesethereumerigonnamesubvolume"><code>services.ethereum.erigon.&lt;name&gt;.subVolume</code><a class="headerlink" href="#servicesethereumerigonnamesubvolume" title="Permanent link">&para;</a></h2>
 <p><strong>Snippet</strong></p>
-<div class="language-nix highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-38-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1"></a>services<span class="o">.</span>ethereum<span class="o">.</span>erigon<span class="o">.</span><span class="l">&lt;name&gt;</span><span class="o">.</span>subVolume
+<div class="language-nix highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-40-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1"></a>services<span class="o">.</span>ethereum<span class="o">.</span>erigon<span class="o">.</span><span class="l">&lt;name&gt;</span><span class="o">.</span>subVolume
 </span></code></pre></div></td></tr></table></div>
 <p><strong>Parameter</strong></p>
 <table>
@@ -2753,6 +2849,27 @@
 <td>boolean</td>
 <td></td>
 <td>false</td>
+</tr>
+</tbody>
+</table>
+<h2 id="servicesethereumerigonnameuser"><code>services.ethereum.erigon.&lt;name&gt;.user</code><a class="headerlink" href="#servicesethereumerigonnameuser" title="Permanent link">&para;</a></h2>
+<p><strong>Snippet</strong></p>
+<div class="language-nix highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-41-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1"></a>services<span class="o">.</span>ethereum<span class="o">.</span>erigon<span class="o">.</span><span class="l">&lt;name&gt;</span><span class="o">.</span>user
+</span></code></pre></div></td></tr></table></div>
+<p><strong>Parameter</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>null or string</td>
+<td></td>
+<td>null</td>
 </tr>
 </tbody>
 </table>
