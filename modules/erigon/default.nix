@@ -116,7 +116,6 @@ in {
               serviceConfig = mkMerge [
                 baseServiceConfig
                 {
-                  User = serviceName;
                   StateDirectory = serviceName;
                   ExecStartPre =
                     mkIf (cfg.subVolume && cfg.args.datadir == null) (mkBefore [
@@ -126,9 +125,20 @@ in {
                   ReadWritePaths =
                     mkIf (cfg.args.datadir != null) cfg.args.datadir;
                 }
+                (mkIf (cfg.user == null) {
+                  User = serviceName;
+                })
+                (mkIf (cfg.user != null) {
+                  DynamicUser = false;
+                  User = cfg.user;
+                })
+                (mkIf (cfg.group != null) {
+                  Group = cfg.group;
+                })
                 (mkIf (cfg.args.authrpc.jwtsecret != null) {
                   LoadCredential = ["jwt-secret:${cfg.args.authrpc.jwtsecret}"];
                 })
+                cfg.extraServiceConfig
               ];
             })
       )

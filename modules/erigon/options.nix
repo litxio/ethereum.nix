@@ -39,6 +39,24 @@
         default = false;
         description = lib.mdDoc "Open ports in the firewall for any enabled networking services";
       };
+
+      user = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = mdDoc "User to run the systemd service.";
+      };
+
+      group = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = mdDoc "Primary group for the systemd service.";
+      };
+
+      extraServiceConfig = mkOption {
+        type = types.attrsOf types.str;
+        default = {};
+        description = mdDoc "Extra settings for the systemd [Service] stanza.";
+      };
     };
   };
 in {
