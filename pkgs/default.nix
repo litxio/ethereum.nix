@@ -19,11 +19,10 @@
   }: let
     inherit (pkgs) callPackage;
     inherit (lib.extras.flakes) platformPkgs platformApps;
-    poetry2nix = inputs.poetry2nix.lib.mkPoetry2Nix {inherit pkgs;};
     callPackageUnstable = pkgsUnstable.callPackage;
   in {
     packages = platformPkgs system rec {
-      besu = callPackage ./besu {};
+      besu = callPackageUnstable ./besu {};
       bls = callPackage ./bls {};
       blst = callPackage ./blst {};
       blutgang = callPackage ./blutgang {inherit (pkgsUnstable) rustPlatform;};
@@ -62,6 +61,7 @@
       rotki-bin = callPackage ./rotki-bin {};
       sedge = callPackage ./sedge {inherit bls mcl;};
       slither = callPackage ./slither {};
+      snarkjs = callPackage ./snarkjs {};
       ssvnode = callPackage ./ssvnode {inherit bls mcl;};
       staking-deposit-cli = callPackage ./staking-deposit-cli {};
       teku = callPackage ./teku {};
@@ -70,7 +70,6 @@
       vouch-unstable = callPackage ./vouch/unstable.nix {inherit bls mcl;};
       vscode-plugin-ackee-blockchain-solidity-tools = callPackage ./ackee-blockchain.solidity-tools {};
       vscode-plugin-consensys-vscode-solidity-visual-editor = callPackage ./consensys.vscode-solidity-auditor {};
-      wake = callPackage ./wake {inherit poetry2nix;};
       web3signer = callPackage ./web3signer {};
       zcli = callPackage ./zcli {};
     };
@@ -129,12 +128,12 @@
       rotki-bin.bin = "rotki";
       sedge.bin = "sedge";
       slither.bin = "slither";
+      snarkjs.bin = "snarkjs";
       ssvnode.bin = "ssvnode";
       staking-deposit-cli.bin = "deposit";
       teku.bin = "teku";
       tx-fuzz.bin = "tx-fuzz";
       vouch.bin = "vouch";
-      wake.bin = "wake";
       zcli.bin = "zcli";
     };
   };
