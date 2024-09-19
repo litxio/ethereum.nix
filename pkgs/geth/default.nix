@@ -16,23 +16,22 @@
     "ethkey"
     "evm"
     "geth"
-    "p2psim"
     "rlpdump"
   ];
 in
   buildGoModule rec {
     pname = "geth";
-    version = "1.14.3";
+    version = "1.14.8";
 
     src = fetchFromGitHub {
       owner = "ethereum";
       repo = "go-ethereum";
       rev = "v${version}";
-      hash = "sha256-h2i/q4gfvqO8SgFxjoIhm4y0icpt+qe0Tq+3W6Ld8KM=";
+      hash = "sha256-y831v6ar1RdDvGQMZf2lZKgq2IQzAAQrNwDCL0xbj24=";
     };
 
     proxyVendor = true;
-    vendorHash = "sha256-yD4Z7vbi3D3f9xGxRQjnjbTKljtjRLeIHRAdWjSub6U=";
+    vendorHash = "sha256-CLGf64Fftu4u8Vaj66Q4xuRKBEMNZmpltUyaUMVyVJk=";
 
     ldflags = ["-s" "-w"];
 
@@ -56,7 +55,6 @@ in
       "cmd/ethkey"
       "cmd/evm"
       "cmd/geth"
-      "cmd/p2psim"
       "cmd/rlpdump"
       "cmd/utils"
     ];

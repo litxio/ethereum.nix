@@ -19,6 +19,7 @@
       ./prysm-validator
       ./mev-boost
       ./restore
+      ./reth
     ];
   };
 }

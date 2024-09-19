@@ -27,17 +27,16 @@
 in
   rustPlatform.buildRustPackage rec {
     pname = "lighthouse";
-    version = "5.1.3";
+    version = "5.3.0";
 
     src = fetchFromGitHub {
       owner = "sigp";
       repo = pname;
       rev = "v${version}";
-      hash = "sha256-jEK8LfeJI+c7T5dYHp1iKBDT2JVjgwLhMuzbATV9AFY=";
+      hash = "sha256-wIj+YabyUrgLjWCfjCAH/Xb8jUG6ss+5SwnE2M82a+4";
     };
 
     patches = [
-      ./use-c-kzg-from-crates-io.patch
       ./use-system-sqlite.patch
     ];
 
@@ -48,10 +47,9 @@ in
     cargoLock = {
       lockFile = ./Cargo.lock;
       outputHashes = {
-        "alloy-consensus-0.1.0" = "sha256-y5AIZN4d7Vm2dVa3jd0e6zXwC8hzPyOv0h5+W/Az3rs=";
-        "libmdbx-0.1.4" = "sha256-NMsR/Wl1JIj+YFPyeMMkrJFfoS07iEAKEQawO89a+/Q=";
+        "quick-protobuf-0.8.1" = "sha256-dgePLYCeoEZz5DGaLifhf3gEIPaL7XB0QT9wRKY8LJg=";
+        "libmdbx-0.1.4" = "sha256-ONp4uPkVCN84MObjXorCZuSjnM6uFSMXK1vdJiX074o=";
         "lmdb-rkv-0.14.0" = "sha256-sxmguwqqcyOlfXOZogVz1OLxfJPo+Q0+UjkROkbbOCk=";
-        "yamux-0.13.1" = "sha256-YX5lE7IuHCQ6XMDgXIaAvm5n5Ngm7PBDp7/6/3QjOnA=";
       };
     };
 
@@ -98,6 +96,7 @@ in
       "--exclude slashing_protection"
       "--exclude watch"
       "--exclude web3signer_tests"
+      "--exclude lighthouse_metrics"
     ];
 
     nativeCheckInputs = [
