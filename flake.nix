@@ -32,7 +32,6 @@
     systems.url = "github:nix-systems/default";
     devshell = {
       url = "github:numtide/devshell";
-      inputs.flake-utils.follows = "flake-utils";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     treefmt-nix = {
@@ -40,29 +39,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-compat.url = "github:nix-community/flake-compat";
-    devour-flake = {
-      url = "github:srid/devour-flake";
-      flake = false;
-    };
-    lib-extras = {
-      url = "github:aldoborrero/lib-extras/v0.2.2";
-      inputs.devshell.follows = "devshell";
-      inputs.flake-parts.follows = "flake-parts";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.treefmt-nix.follows = "treefmt-nix";
-    };
   };
 
   outputs = inputs @ {
     flake-parts,
     nixpkgs,
-    lib-extras,
     systems,
     ...
   }: let
-    lib = nixpkgs.lib.extend (l: _: {
-      extras = (lib-extras.lib l) // (import ./lib.nix l);
-    });
+    lib = nixpkgs.lib.extend (l: _: (import ./lib.nix l));
   in
     flake-parts.lib.mkFlake {
       inherit inputs;
@@ -81,22 +66,21 @@
         config,
         pkgs,
         pkgsUnstable,
-        pkgs2311,
         system,
         self',
         ...
       }: {
         # pkgs
         _module.args = {
-          pkgs = lib.extras.nix.mkNixpkgs {
+          pkgs = lib.mkNixpkgs {
             inherit system;
             inherit (inputs) nixpkgs;
           };
-          pkgsUnstable = lib.extras.nix.mkNixpkgs {
+          pkgsUnstable = lib.mkNixpkgs {
             inherit system;
             nixpkgs = inputs.nixpkgs-unstable;
           };
-          pkgs2311 = lib.extras.nix.mkNixpkgs {
+          pkgs2311 = lib.mkNixpkgs {
             inherit system;
             nixpkgs = inputs.nixpkgs-2311;
           };
@@ -141,7 +125,7 @@
               "*.md"
               "*.html"
             ];
-            mdformat.command = lib.mkDefault (pkgsUnstable.mdformat.withPlugins (p: [
+            mdformat.package = lib.mkDefault (pkgs.mdformat.withPlugins (p: [
               p.mdformat-admon
               p.mdformat-beautysh
               p.mdformat-footnote
@@ -164,25 +148,8 @@
 
         # checks
         checks =
-          {
-            # TODO: Restore this check whenever buildbot supports more specific checks
-            # nix-build-all = pkgs.writeShellApplication {
-            #   name = "nix-build-all";
-            #   runtimeInputs = [
-            #     pkgs.nix
-            #     devour-flake
-            #   ];
-            #   text = ''
-            #     # Make sure that flake.lock is sync
-            #     nix flake lock --no-update-lock-file
-            #
-            #     # Do a full nix build (all outputs)
-            #     devour-flake . "$@"
-            #   '';
-            # };
-          }
           # merge in the package derivations to force a build of all packages during a `nix flake check`
-          // (with lib; mapAttrs' (n: nameValuePair "package-${n}") (filterAttrs (n: _: ! builtins.elem n ["docs"]) self'.packages))
+          (with lib; mapAttrs' (n: nameValuePair "package-${n}") (filterAttrs (n: _: ! builtins.elem n ["docs"]) self'.packages))
           # mix in tests
           // config.testing.checks;
       };

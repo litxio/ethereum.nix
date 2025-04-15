@@ -10,7 +10,7 @@ The list of supported apps is growing every day! We plan to keep this list up to
 
     For brevity and consistency, all the commands are listed in the local variant.
 
-## Consenus Clients
+## Consensus Clients
 
 The consensus client (also known as the Beacon Node, CL client or formerly the Eth2 client) implements the proof-of-stake consensus algorithm, which enables the network to achieve agreement based on validated data from the execution client.
 
@@ -21,7 +21,6 @@ The consensus client (also known as the Beacon Node, CL client or formerly the E
 | [Lighthouse](https://lighthouse.sigmaprime.io/)               | `nix run .#lighthouse`         |
 | [Lodestar](https://lodestar.chainsafe.io/)                    | Not supported yet.             |
 | [Prysm](https://prysmaticlabs.com/) @span                     | `nix run .#prysm-beacon-chain` |
-|                                                               | `nix run .#prysm-validator`    |
 |                                                               | `nix run .#prysm-validator`    |
 |                                                               | `nix run .#prysm-client-stats` |
 |                                                               | `nix run .#prysm-prysmctl`     |
@@ -43,6 +42,7 @@ The execution client (also known as the Execution Engine, EL client or formerly 
 | [Geth](https://geth.ethereum.org/) @span        | `nix run .#geth`              |
 |                                                 | `nix run .#geth-abidump`      |
 |                                                 | `nix run .#geth-abigen`       |
+|                                                 | `nix run .#geth-blsync`       |
 |                                                 | `nix run .#geth-bootnode`     |
 |                                                 | `nix run .#geth-clef`         |
 |                                                 | `nix run .#geth-devp2p`       |
