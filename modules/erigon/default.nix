@@ -124,6 +124,8 @@ in {
                   ExecStart = "${cfg.package}/bin/erigon ${scriptArgs}";
                   ReadWritePaths =
                     mkIf (cfg.args.datadir != null) cfg.args.datadir;
+
+                  SystemCallFilter = lib.mkDefault ["@system-service" "~@privileged" "mincore"];
                 }
                 (mkIf (cfg.user == null) {
                   User = serviceName;
