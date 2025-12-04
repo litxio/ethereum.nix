@@ -16,74 +16,73 @@
     self',
     pkgs,
     pkgsUnstable,
-    pkgs2311,
     system,
     ...
   }: let
     inherit (pkgs) callPackage;
     inherit (lib) platformPkgs platformApps;
     callPackageUnstable = pkgsUnstable.callPackage;
-    callPackage2311 = pkgs2311.callPackage;
   in {
     packages = platformPkgs system rec {
-      besu = callPackageUnstable ./by-name/be/besu {};
-      bls = callPackage ./by-name/bl/bls {};
-      blst = callPackage ./by-name/bl/blst {};
-      blutgang = callPackage ./by-name/bl/blutgang {inherit (pkgsUnstable) rustPlatform;};
-      charon = callPackage ./by-name/ch/charon {inherit bls mcl;};
-      dirk = callPackage ./by-name/di/dirk {inherit bls mcl;};
-      dreamboat = callPackage ./by-name/dr/dreamboat {inherit blst;};
-      eigenlayer = callPackage ./by-name/ei/eigenlayer {};
-      erigon = callPackage ./by-name/er/erigon {};
-      eth2-testnet-genesis = callPackage ./by-name/et/eth2-testnet-genesis {inherit bls;};
-      eth2-val-tools = callPackage ./by-name/et/eth2-val-tools {inherit bls mcl;};
-      eth-validator-watcher = callPackage2311 ./by-name/et/eth-validator-watcher {};
-      ethdo = callPackage ./by-name/et/ethdo {inherit bls mcl;};
-      ethereal = callPackage ./by-name/et/ethereal {};
-      evmc = callPackage ./by-name/ev/evmc {};
-      foundry = callPackageUnstable ./by-name/fo/foundry {};
+      besu = callPackage ./by-name/besu {};
+      bls = callPackage ./by-name/bls {};
+      blst = callPackage ./by-name/blst {};
+      blutgang = callPackage ./by-name/blutgang {inherit (pkgsUnstable) rustPlatform;};
+      charon = callPackageUnstable ./by-name/charon {inherit bls mcl;};
+      ckzg = callPackage ./by-name/ckzg {};
+      dirk = callPackage ./by-name/dirk {inherit bls mcl;};
+      eigenlayer = callPackage ./by-name/eigenlayer {};
+      erigon = callPackage ./by-name/erigon {};
+      eth2-testnet-genesis = callPackage ./by-name/eth2-testnet-genesis {inherit bls;};
+      eth2-val-tools = callPackage ./by-name/eth2-val-tools {inherit bls mcl;};
+      eth-validator-watcher = callPackage ./by-name/eth-validator-watcher {};
+      ethdo = callPackage ./by-name/ethdo {inherit bls mcl;};
+      ethereal = callPackage ./by-name/ethereal {};
+      ethstaker-deposit-cli = callPackage ./by-name/ethstaker-deposit-cli {};
+      evmc = callPackage ./by-name/evmc {};
+      foundry = callPackageUnstable ./by-name/foundry {};
       foundry-bin = inputs.foundry-nix.defaultPackage.${system}.overrideAttrs (_oldAttrs: {
         # TODO: Uncomment when https://github.com/shazow/foundry.nix/issues/23
         # meta.platforms = [system];
-        meta.platforms = ["x86_64-linux" "aarch64-linux"];
+        meta.platforms = [
+          "x86_64-linux"
+          "aarch64-linux"
+        ];
       });
-      geth = callPackageUnstable ./by-name/ge/geth {};
-      heimdall = callPackage ./by-name/he/heimdall {};
-      lighthouse = callPackageUnstable ./by-name/li/lighthouse {inherit foundry;};
-      mcl = callPackage ./by-name/mc/mcl {};
-      mev-boost = callPackageUnstable ./by-name/me/mev-boost {inherit blst;};
-      mev-boost-relay = callPackage ./by-name/me/mev-boost-relay {inherit blst;};
-      mev-rs = callPackage ./by-name/me/mev-rs {};
-      nethermind = callPackageUnstable ./by-name/ne/nethermind {};
-      nimbus = callPackageUnstable ./by-name/ni/nimbus {};
-      prysm = callPackageUnstable ./by-name/pr/prysm {inherit bls blst;};
-      reth = callPackageUnstable ./by-name/re/reth {};
-      rocketpool = callPackage ./by-name/ro/rocketpool {};
-      rocketpoold = callPackage ./by-name/ro/rocketpoold {inherit bls blst;};
-      rotki-bin = callPackageUnstable ./by-name/ro/rotki-bin {};
-      sedge = callPackage2311 ./by-name/se/sedge {
-        bls = callPackage2311 ./by-name/bl/bls {};
-        mcl = callPackage2311 ./by-name/mc/mcl {};
+      geth = callPackage ./by-name/geth {};
+      heimdall = callPackageUnstable ./by-name/heimdall {};
+      kurtosis = callPackage ./by-name/kurtosis {};
+      lighthouse = callPackageUnstable ./by-name/lighthouse {inherit foundry;};
+      mcl = callPackage ./by-name/mcl {};
+      mev-boost = callPackage ./by-name/mev-boost {inherit blst;};
+      mev-boost-relay = callPackage ./by-name/mev-boost-relay {inherit blst;};
+      nethermind = callPackage ./by-name/nethermind {};
+      nimbus = callPackage ./by-name/nimbus {};
+      prysm = callPackageUnstable ./by-name/prysm {inherit bls blst ckzg;};
+      reth = callPackageUnstable ./by-name/reth {};
+      rocketpool = callPackageUnstable ./by-name/rocketpool {};
+      rocketpoold = callPackageUnstable ./by-name/rocketpoold {inherit bls blst;};
+      rotki-bin = callPackage ./by-name/rotki-bin {};
+      sedge = callPackage ./by-name/sedge {
+        bls = callPackage ./by-name/bls {};
+        mcl = callPackage ./by-name/mcl {};
       };
-      slither = callPackage ./by-name/sl/slither {};
-      snarkjs = callPackage ./by-name/sn/snarkjs {};
-      ssv-dkg = callPackage2311 ./by-name/ss/ssv-dkg {
-        bls = callPackage2311 ./by-name/bl/bls {};
-        mcl = callPackage2311 ./by-name/mc/mcl {};
+      slither = callPackage ./by-name/slither {};
+      snarkjs = callPackage ./by-name/snarkjs {};
+      ssv-dkg = callPackage ./by-name/ssv-dkg {
+        bls = callPackage ./by-name/bls {};
+        mcl = callPackage ./by-name/mcl {};
       };
-      ssvnode = callPackage ./by-name/ss/ssvnode {
-        bls = callPackage2311 ./by-name/bl/bls {};
-        mcl = callPackage2311 ./by-name/mc/mcl {};
+      ssvnode = callPackage ./by-name/ssvnode {
+        bls = callPackage ./by-name/bls {};
+        mcl = callPackage ./by-name/mcl {};
       };
-      staking-deposit-cli = callPackage ./by-name/st/staking-deposit-cli {};
-      teku = callPackage ./by-name/te/teku {};
-      tx-fuzz = callPackage ./by-name/tx/tx-fuzz {};
-      vouch = callPackage ./by-name/vo/vouch {inherit bls mcl;};
-      vouch-unstable = callPackage ./by-name/vo/vouch/unstable.nix {inherit bls mcl;};
-      vscode-plugin-ackee-blockchain-solidity-tools = callPackage ./by-name/ac/ackee-blockchain.solidity-tools {};
-      vscode-plugin-consensys-vscode-solidity-visual-editor = callPackage ./by-name/co/consensys.vscode-solidity-auditor {};
-      web3signer = callPackage ./by-name/we/web3signer {};
-      zcli = callPackage ./by-name/zc/zcli {};
+      staking-deposit-cli = callPackage ./by-name/staking-deposit-cli {};
+      teku = callPackage ./by-name/teku {};
+      tx-fuzz = callPackage ./by-name/tx-fuzz {};
+      vouch = callPackage ./by-name/vouch {inherit bls mcl;};
+      web3signer = callPackage ./by-name/web3signer {};
+      zcli = callPackage ./by-name/zcli {};
     };
 
     apps = platformApps self'.packages {
@@ -91,7 +90,6 @@
       blutgang.bin = "blutgang";
       charon.bin = "charon";
       dirk.bin = "dirk";
-      dreamboat.bin = "dreamboat";
       erigon.bin = "erigon";
       eth2-testnet-genesis.bin = "eth2-testnet-genesis";
       eth2-val-tools.bin = "eth2-val-tools";
@@ -115,10 +113,10 @@
         geth-faucet.bin = "faucet";
         geth-rlpdump.bin = "rlpdump";
       };
+      kurtosis.bin = "kurtosis";
       lighthouse.bin = "lighthouse";
       mev-boost-relay.bin = "mev-boost-relay";
       mev-boost.bin = "mev-boost";
-      mev-rs.bin = "mev";
       nethermind = {
         nethermind.bin = "Nethermind.Cli";
         nethermind-runner.bin = "Nethermind.Runner";

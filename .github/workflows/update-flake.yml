@@ -1,0 +1,146 @@
+name: Update Flake
+on:
+  workflow_call:
+    inputs:
+      packages:
+        description: "Space-separated list of specific packages to update (empty for all)"
+        required: false
+        type: string
+        default: ""
+      inputs:
+        description: "Space-separated list of specific inputs to update (empty for all)"
+        required: false
+        type: string
+        default: ""
+      pr-labels:
+        description: "Comma-separated list of labels to add to PRs"
+        required: false
+        type: string
+        default: "dependencies,automated"
+      auto-merge:
+        description: "Enable auto-merge for created pull requests"
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      APP_ID:
+        description: "GitHub App ID"
+        required: true
+      APP_PRIVATE_KEY:
+        description: "GitHub App private key"
+        required: true
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.build-matrix.outputs.matrix }}
+      has-updates: ${{ steps.build-matrix.outputs.has-updates }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup Nix
+        uses: cachix/install-nix-action@v31
+      - name: Build update matrix
+        id: build-matrix
+        env:
+          PACKAGES: "${{ inputs.packages }}"
+          INPUTS: "${{ inputs.inputs }}"
+        run: |
+          # Use the discovery script
+          .github/actions/discovery.sh
+  update:
+    needs: discover
+    if: needs.discover.outputs.has-updates == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.discover.outputs.matrix) }}
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+      - name: Setup Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ steps.app-token.outputs.token }}
+      - name: Perform update
+        id: update
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          # Use the update script
+          if [[ "${{ matrix.type }}" = package ]]; then
+            # Only load the devshell to update packages
+            nix develop -c .github/actions/update.sh "${{ matrix.type }}" "${{ matrix.name }}"
+          else
+            .github/actions/update.sh "${{ matrix.type }}" "${{ matrix.name }}"
+          fi
+      - name: Prepare PR metadata
+        id: pr-metadata
+        if: steps.update.outputs.updated == 'true'
+        run: |
+          if [ "${{ matrix.type }}" = "package" ]; then
+            echo "branch=update/${{ matrix.name }}" >> "$GITHUB_OUTPUT"
+            echo "title=${{ matrix.name }}: ${{ matrix.current_version }} -> ${{ steps.update.outputs.new_version }}" >> "$GITHUB_OUTPUT"
+            echo "body=Automated update of ${{ matrix.name }} from ${{ matrix.current_version }} to ${{ steps.update.outputs.new_version }}." >> "$GITHUB_OUTPUT"
+          else
+            echo "branch=update-${{ matrix.name }}" >> "$GITHUB_OUTPUT"
+            echo "title=flake.lock: Update ${{ matrix.name }}" >> "$GITHUB_OUTPUT"
+            cat <<EOF >> "$GITHUB_OUTPUT"
+          body<<EOFMARKER
+          This PR updates the flake input \`${{ matrix.name }}\` to the latest version.
+
+          ## Changes
+          - ${{ matrix.name }}: \`${{ matrix.current_version }}\` → \`${{ steps.update.outputs.new_version }}\`
+          EOFMARKER
+          EOF
+          fi
+      - name: Create pull request
+        if: steps.update.outputs.updated == 'true'
+        uses: peter-evans/create-pull-request@v7
+        id: create-pr
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          commit-message: ${{ steps.pr-metadata.outputs.title }}
+          branch: ${{ steps.pr-metadata.outputs.branch }}
+          delete-branch: true
+          title: ${{ steps.pr-metadata.outputs.title }}
+          body: ${{ steps.pr-metadata.outputs.body }}
+          labels: ${{ inputs.pr-labels }}
+          signoff: true
+          sign-commits: true
+      - name: Enable auto-merge
+        if: steps.update.outputs.updated == 'true' && inputs.auto-merge == true && steps.create-pr.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          gh pr merge ${{ steps.create-pr.outputs.pull-request-number }} --auto --squash || echo "Note: Auto-merge may require branch protection rules"
+  summary:
+    needs: [discover, update]
+    runs-on: ubuntu-latest
+    if: always() && needs.discover.outputs.has-updates == 'true'
+    steps:
+      - name: Generate summary
+        run: |-
+          echo "## Update Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Check overall status
+          if [ "${{ contains(needs.update.result, 'failure') }}" = "true" ]; then
+            echo "⚠️ Some updates failed. Check individual job logs for details." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ All update jobs completed." >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Configuration:" >> $GITHUB_STEP_SUMMARY
+          echo "- Auto-merge: ${{ inputs.auto-merge }}" >> $GITHUB_STEP_SUMMARY

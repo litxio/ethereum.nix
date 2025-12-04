@@ -20,6 +20,7 @@
       ./mev-boost
       ./restore
       ./reth
+      ./nimbus-validator
     ];
   };
 }

@@ -122,6 +122,7 @@ in {
                       "+${scripts.setupSubVolume} /var/lib/private/${serviceName}"
                     ]);
                   ExecStart = "${cfg.package}/bin/erigon ${scriptArgs}";
+
                   ReadWritePaths =
                     mkIf (cfg.args.datadir != null) cfg.args.datadir;
 
